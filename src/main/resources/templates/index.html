@@ -8,10 +8,14 @@
   <link rel="stylesheet" href="/css/style.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-<br><br>
-<h1 class="text-center">Upload Image into the Gallery</h1><br><br>
+<div class="jumbotron text-center">
+	<h1>Image Gallery</h1>
+</div>
 <div class="container text-center">
 <a  href="/image/display" style="float:left;" class="btn btn-success text-right">Show All</a>
 </div>
@@ -28,16 +32,19 @@
 							<p id="error_name"></p>
 						</div>
 						
+
+						<div class=" contact-form1 form-group">
+							<label class="col-form-label">Height</label>
+							<input type="text" class="form-control" placeholder="Height in m" name="price" id="price" required="required">
+							<p id="error_price"></p>
+						</div>
+
 						<div class=" contact-form1 form-group">
 							<label class="col-form-label">Image</label>
 							<input type="file" class="form-control" placeholder="" name="image" id="image" required="required">
 							<p id="error_file"></p>
 						</div>
-						<div class=" contact-form1 form-group">
-							<label class="col-form-label">Value</label>
-							<input type="text" class="form-control" placeholder="Value" name="price" id="price" required="required">
-							<p id="error_price"></p>
-						</div>
+
 					</div>
 					
 						<div class="right-w3l">

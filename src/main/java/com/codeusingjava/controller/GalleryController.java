@@ -36,16 +36,36 @@ import com.codeusingjava.service.GalleryService;
 public class GalleryController {
 	
 	@Value("${uploadDir}")
-	private String uploadFolder;
+	private String uploadFile;
 
 	@Autowired
 	private GalleryService galleryService;
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@GetMapping(value = {"/", "/home"})
 	public String addProductPage() {
 		return "index";
+	}
+
+	@GetMapping("/image/display/{id}")
+	@ResponseBody
+	void showImage(@PathVariable("id") Long id, HttpServletResponse response, Optional<ModelGallery> imageGallery)
+			throws ServletException, IOException {
+		logger.info("Id :: " + id);
+		imageGallery = galleryService.getImageById(id);
+		response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
+		response.getOutputStream().write(imageGallery.get().getImage());
+		response.getOutputStream().close();
+	}
+
+
+	//displays the Map of images
+	@GetMapping("/image/display")
+	String show(Model map) {
+		List<ModelGallery> images = galleryService.getAllImages();
+		map.addAttribute("images", images);
+		return "images";
 	}
 
 	//saves the images
@@ -54,10 +74,10 @@ public class GalleryController {
 			@RequestParam("price") double price, Model model, HttpServletRequest request
 			,final @RequestParam("image") MultipartFile file) {
 		try {
-			String uploadDirectory = request.getServletContext().getRealPath(uploadFolder);
+			String uploadDirectory = request.getServletContext().getRealPath(uploadFile);
 			String fileName = file.getOriginalFilename();
 			String filePath = Paths.get(uploadDirectory, fileName).toString();
-			log.info("FileName: " + file.getOriginalFilename());
+			logger.info("FileName: " + file.getOriginalFilename());
 			if (fileName == null || fileName.contains("..")) {
 				model.addAttribute("invalid", "Sorry! Filename contains invalid path sequence \" + fileName");
 				return new ResponseEntity<>("Sorry! Filename contains invalid path sequence " + fileName, HttpStatus.BAD_REQUEST);
@@ -66,7 +86,7 @@ public class GalleryController {
 			try {
 				File dir = new File(uploadDirectory);
 				if (!dir.exists()) {
-					log.info("Folder Created");
+					logger.info("Folder Created");
 					dir.mkdirs();
 				}
 
@@ -75,43 +95,23 @@ public class GalleryController {
 				stream.write(file.getBytes());
 				stream.close();
 			} catch (Exception e) {
-				log.info("in catch");
+				logger.info("in catch");
 				e.printStackTrace();
 			}
-			byte[] imageData = file.getBytes();
+			byte[] blobData = file.getBytes();
 			ModelGallery imageGallery = new ModelGallery();
 			imageGallery.setName(names[0]);
-			imageGallery.setImage(imageData);
+			imageGallery.setImage(blobData);
 			imageGallery.setPrice(price);
 			galleryService.saveImage(imageGallery);
-			log.info("HttpStatus===" + new ResponseEntity<>(HttpStatus.OK));
+			logger.info("HttpStatus===" + new ResponseEntity<>(HttpStatus.OK));
 			return new ResponseEntity<>("Product Saved With File - " + fileName, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.info("Exception: " + e);
+			logger.info("Exception: " + e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 
-
-	@GetMapping("/image/display/{id}")
-	@ResponseBody
-	void showImage(@PathVariable("id") Long id, HttpServletResponse response, Optional<ModelGallery> imageGallery)
-			throws ServletException, IOException {
-		log.info("Id :: " + id);
-		imageGallery = galleryService.getImageById(id);
-		response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
-		response.getOutputStream().write(imageGallery.get().getImage());
-		response.getOutputStream().close();
-	}
-
-
-//displays the Map of images
-	@GetMapping("/image/display")
-	String show(Model map) {
-		List<ModelGallery> images = galleryService.getAllActiveImages();
-		map.addAttribute("images", images);
-		return "images";
-	}
-}	
+}
 

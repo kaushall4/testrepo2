@@ -23,7 +23,7 @@ public class GalleryService {
 	}
 
 
-	public List<ModelGallery> getAllActiveImages() {
+	public List<ModelGallery> getAllImages() {
 		return imageGalleryRepository.findAll();
 	}
 

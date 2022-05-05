@@ -25,8 +25,8 @@ public class ModelGallery {
 	private String name;
 	
 	
-	@Column(name = "price",nullable = false, precision = 10, scale = 2)
-    private double price;
+	@Column(name = "height",nullable = false, precision = 10, scale = 2)
+    private double height;
 	
 	@Lob
     @Column(name = "Image", length = Integer.MAX_VALUE, nullable = true)
@@ -54,11 +54,11 @@ public class ModelGallery {
 
 
 	public double getPrice() {
-		return price;
+		return height;
 	}
 
 	public void setPrice(double price) {
-		this.price = price;
+		this.height = price;
 	}
 
 	public byte[] getImage() {
@@ -71,7 +71,7 @@ public class ModelGallery {
 
 	@Override
 	public String toString() {
-		return "ImgGallery [id=" + id + ", name=" + name + ", price=" + price + ", image=" + Arrays.toString(image)
+		return "ImgGallery [id=" + id + ", name=" + name + ", height=" + height + ", image=" + Arrays.toString(image)
 				+ "]";
 	}
 
