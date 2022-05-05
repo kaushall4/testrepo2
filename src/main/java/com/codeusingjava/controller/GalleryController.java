@@ -28,18 +28,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.codeusingjava.model.ImgGallery;
-import com.codeusingjava.service.ImgGalleryService;
+import com.codeusingjava.model.ModelGallery;
+import com.codeusingjava.service.GalleryService;
 
 
 @Controller
-public class ImgGalleryController {
+public class GalleryController {
 	
 	@Value("${uploadDir}")
 	private String uploadFolder;
 
 	@Autowired
-	private ImgGalleryService imgGalleryService;
+	private GalleryService galleryService;
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -79,11 +79,11 @@ public class ImgGalleryController {
 				e.printStackTrace();
 			}
 			byte[] imageData = file.getBytes();
-			ImgGallery imageGallery = new ImgGallery();
+			ModelGallery imageGallery = new ModelGallery();
 			imageGallery.setName(names[0]);
 			imageGallery.setImage(imageData);
 			imageGallery.setPrice(price);
-			imgGalleryService.saveImage(imageGallery);
+			galleryService.saveImage(imageGallery);
 			log.info("HttpStatus===" + new ResponseEntity<>(HttpStatus.OK));
 			return new ResponseEntity<>("Product Saved With File - " + fileName, HttpStatus.OK);
 		} catch (Exception e) {
@@ -96,10 +96,10 @@ public class ImgGalleryController {
 
 	@GetMapping("/image/display/{id}")
 	@ResponseBody
-	void showImage(@PathVariable("id") Long id, HttpServletResponse response, Optional<ImgGallery> imageGallery)
+	void showImage(@PathVariable("id") Long id, HttpServletResponse response, Optional<ModelGallery> imageGallery)
 			throws ServletException, IOException {
 		log.info("Id :: " + id);
-		imageGallery = imgGalleryService.getImageById(id);
+		imageGallery = galleryService.getImageById(id);
 		response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
 		response.getOutputStream().write(imageGallery.get().getImage());
 		response.getOutputStream().close();
@@ -109,7 +109,7 @@ public class ImgGalleryController {
 //displays the Map of images
 	@GetMapping("/image/display")
 	String show(Model map) {
-		List<ImgGallery> images = imgGalleryService.getAllActiveImages();
+		List<ModelGallery> images = galleryService.getAllActiveImages();
 		map.addAttribute("images", images);
 		return "images";
 	}

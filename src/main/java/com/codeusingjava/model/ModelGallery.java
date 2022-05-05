@@ -14,7 +14,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "image_gallery")
-public class ImgGallery {
+public class ModelGallery {
 
 	//model class
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +33,7 @@ public class ImgGallery {
     private byte[] image;
     
   
-	public ImgGallery() {}
+	public ModelGallery() {}
 
 	public Long getId() {
 		return id;
